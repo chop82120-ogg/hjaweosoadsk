@@ -24,8 +24,14 @@
       <div class="confetti" id="confetti" aria-hidden="true"></div>
     </main>
 
-    <audio id="firstBg" src="assets/firstbg.ogg" loop preload="auto"></audio>
-    <audio id="lastBg" src="assets/lastbg.ogg" loop preload="auto"></audio>
+    <audio id="firstBg" loop preload="auto">
+      <source src="assets/firstbg.mp3" type="audio/mpeg">
+      <source src="assets/firstbg.ogg" type="audio/ogg">
+    </audio>
+    <audio id="lastBg" loop preload="auto">
+      <source src="assets/lastbg.mp3" type="audio/mpeg">
+      <source src="assets/lastbg.ogg" type="audio/ogg">
+    </audio>
     <audio id="dialogSound" src="assets/dialfirstsecond.wav" preload="auto"></audio>
     <audio id="lastSound" src="assets/diallast.wav" preload="auto"></audio>
 

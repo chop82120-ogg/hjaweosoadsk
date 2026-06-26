@@ -14,7 +14,9 @@ const colors = ["#ff2f75", "#47ff89", "#ffe64d", "#38d7ff", "#ff7d2d", "#b14cff"
 
 let step = 0;
 let busy = false;
-let started = false;
+let sceneStarted = false;
+let firstMusicStarted = false;
+let inputUnlocked = false;
 
 const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -28,12 +30,32 @@ async function playAudio(audio, volume = 1) {
   }
 }
 
-async function startScene() {
-  if (started) return;
-  started = true;
-  startLayer.classList.add("hidden");
-  await playAudio(firstBg, 0.7);
+function startScene() {
+  if (sceneStarted) return;
+  sceneStarted = true;
   window.setTimeout(() => treeButton.classList.add("visible"), 520);
+}
+
+async function startFirstMusic() {
+  if (firstMusicStarted || !lastBg.paused) return;
+  firstBg.volume = 0.7;
+
+  try {
+    await firstBg.play();
+    firstMusicStarted = true;
+    return true;
+  } catch {
+    // Browsers usually allow this after the first real tap.
+    return false;
+  }
+}
+
+async function unlockExperience() {
+  startScene();
+  const musicStarted = await startFirstMusic();
+  inputUnlocked = true;
+  startLayer.classList.add("hidden");
+  return musicStarted;
 }
 
 async function showDialog(src) {
@@ -92,7 +114,13 @@ async function finalReveal(event) {
 }
 
 treeButton.addEventListener("click", async (event) => {
-  await startScene();
+  startScene();
+  if (!inputUnlocked) {
+    await unlockExperience();
+    return;
+  }
+
+  await startFirstMusic();
   if (busy) return;
 
   if (step < dialogs.length) {
@@ -106,6 +134,14 @@ treeButton.addEventListener("click", async (event) => {
   await finalReveal(event);
 });
 
-startLayer.addEventListener("click", startScene);
-document.addEventListener("pointerdown", startScene, { once: true });
-window.addEventListener("load", startScene);
+startLayer.addEventListener("click", unlockExperience);
+
+window.addEventListener("load", () => {
+  startScene();
+  startFirstMusic().then((musicStarted) => {
+    if (musicStarted) {
+      inputUnlocked = true;
+      startLayer.classList.add("hidden");
+    }
+  });
+});
