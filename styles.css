@@ -1,0 +1,271 @@
+:root {
+  color-scheme: dark;
+  --fade-fast: 380ms;
+  --fade-dialog: 900ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+body {
+  min-height: 100svh;
+  font-family: system-ui, sans-serif;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  height: 100svh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 58%, rgba(31, 4, 23, 0.22), transparent 38%),
+    #000;
+}
+
+.start-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.start-layer.hidden {
+  pointer-events: none;
+}
+
+.tree-button {
+  position: relative;
+  z-index: 2;
+  width: min(48vw, 230px);
+  aspect-ratio: 247 / 214;
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  cursor: pointer;
+  filter: drop-shadow(0 0 22px rgba(222, 20, 92, 0.42));
+  transition:
+    opacity 2200ms ease,
+    transform 2200ms ease,
+    filter 300ms ease;
+}
+
+.tree-button.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.tree-button:disabled {
+  pointer-events: none;
+}
+
+.tree-button:not(:disabled):active {
+  transform: translateY(1px) scale(0.96);
+  filter: drop-shadow(0 0 30px rgba(231, 27, 106, 0.7));
+}
+
+.tree {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.dialog {
+  position: fixed;
+  left: 50%;
+  bottom: max(7svh, 26px);
+  z-index: 3;
+  width: min(92vw, 566px);
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  image-rendering: pixelated;
+  transform: translateX(-50%) translateY(8px);
+}
+
+.dialog.show {
+  animation: dialogIn var(--fade-fast) ease forwards;
+}
+
+.dialog.hide {
+  animation: dialogOut var(--fade-dialog) ease forwards;
+}
+
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 1.4svh, 14px);
+  padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reveal.show {
+  opacity: 1;
+}
+
+.final-text,
+.plush {
+  opacity: 0;
+  transform: scale(0.88);
+  will-change: transform, opacity;
+}
+
+.final-text {
+  width: min(92vw, 420px);
+  max-height: 43svh;
+  object-fit: contain;
+}
+
+.plush {
+  width: min(66vw, 320px);
+  max-height: 36svh;
+  object-fit: contain;
+  filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.2));
+}
+
+.reveal.show .final-text,
+.reveal.show .plush {
+  animation:
+    revealIn 430ms ease forwards,
+    softShake 780ms 430ms ease-in-out infinite;
+}
+
+.reveal.show .plush {
+  animation-delay: 0ms, 470ms;
+}
+
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.piece {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  background: var(--color);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(var(--angle));
+  animation: burst 950ms cubic-bezier(0.16, 0.72, 0.25, 1) forwards;
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes dialogOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+@keyframes revealIn {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes softShake {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(-2px, 1px) rotate(-0.8deg);
+  }
+
+  50% {
+    transform: translate(2px, -1px) rotate(0.9deg);
+  }
+
+  75% {
+    transform: translate(-1px, -2px) rotate(-0.5deg);
+  }
+}
+
+@keyframes burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.65) rotate(var(--angle));
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(1.1)
+      rotate(calc(var(--angle) + 260deg));
+  }
+}
+
+@media (min-width: 700px) {
+  .tree-button {
+    width: min(24vw, 250px);
+  }
+
+  .final-text {
+    width: min(42vw, 520px);
+    max-height: 46vh;
+  }
+
+  .plush {
+    width: min(28vw, 360px);
+    max-height: 40vh;
+  }
+}

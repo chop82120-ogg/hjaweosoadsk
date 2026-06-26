@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Birthday Wish</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="stage" aria-label="Birthday gift wish scene">
+      <button class="start-layer" id="startLayer" aria-label="Start"></button>
+
+      <button class="tree-button" id="treeButton" aria-label="Strange tree">
+        <img class="tree" src="assets/tree.png" alt="">
+      </button>
+
+      <img class="dialog" id="dialog" src="" alt="">
+
+      <section class="reveal" id="reveal" aria-hidden="true">
+        <img class="final-text" src="assets/dial-last.png" alt="">
+        <img class="plush" src="assets/plush.png" alt="">
+      </section>
+
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+    </main>
+
+    <audio id="firstBg" src="assets/firstbg.ogg" loop preload="auto"></audio>
+    <audio id="lastBg" src="assets/lastbg.ogg" loop preload="auto"></audio>
+    <audio id="dialogSound" src="assets/dialfirstsecond.wav" preload="auto"></audio>
+    <audio id="lastSound" src="assets/diallast.wav" preload="auto"></audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
